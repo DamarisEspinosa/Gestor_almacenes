@@ -32,7 +32,7 @@ class WarehouseController extends Controller
         $almacen = Almacen::where('nombre', $name)->firstOrFail();
 
         // Obtén los artículos relacionados con este almacén
-        $articulos = $almacen->articulos;
+        $articulos = $almacen->articulos()->where('user_id', Auth::id())->get();
 
         // Obtener todos los almacenes del usuario autenticado
         $almacenes = Almacen::all();

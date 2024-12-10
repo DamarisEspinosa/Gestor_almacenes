@@ -1,11 +1,9 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-2xl text-blue-700 leading-tight">
-            {{ __('Editar Usuario') }}
-        </h2>
-    </x-slot>
+    <div class="bg-blue-200 text-white p-4 rounded-lg" style="min-height: 60px;">
+    </div>
 
-    <div class="py-12 bg-gray-100">
+
+    <div class="py-12 bg-blue-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 @if ($errors->any())

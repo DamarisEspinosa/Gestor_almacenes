@@ -14,8 +14,10 @@ return new class extends Migration {
             $table->text('descripcion')->nullable();
             $table->unsignedBigInteger('almacen_id'); 
             $table->unsignedBigInteger('proveedor_id'); 
+            $table->unsignedBigInteger('user_id'); 
             $table->foreign('almacen_id')->references('id')->on('almacenes')->onDelete('cascade');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

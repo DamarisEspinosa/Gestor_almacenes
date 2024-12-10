@@ -9,11 +9,16 @@
 
     <div class="bg-blue-200 py-6">
         <div class="text-center mb-4">
-            <!-- Mostrar mensaje de éxito -->
             @if (session('success'))
-                <div class="bg-green-200 text-green-700 p-4 rounded mb-4">
-                    {{ session('success') }}
-                </div>
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                </script>
             @endif
         </div>
 
@@ -49,17 +54,13 @@
                                     class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded">
                                     Modificar
                                 </a>
-                                <form method="POST" action="{{ route('articulos.destroy', ['almacen' => $almacen->id, 'articulo' => $articulo->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button 
-                                        type="submit"
-                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
-                                        onclick="return confirm('¿Estás seguro de eliminar este artículo?')">
-                                        Eliminar
-                                    </button>
-                                </form>
+                                <button 
+                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
+                                    onclick="deleteArticulo({{ $almacen->id }}, {{ $articulo->id }})">
+                                    Eliminar
+                                </button>
                                 <button
+                                    onclick="sendArticulo({{ $articulo->id }})"
                                     class="btn-enviar bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded"
                                     data-producto="{{ $articulo->producto }}" 
                                     data-cantidad="{{ $articulo->cantidad }}"
@@ -88,11 +89,13 @@
                 <select id="almacen-destino" class="block w-full border border-gray-300 rounded p-2 mb-4">
                     <option value="">Selecciona un almacén</option>
                     @foreach ($almacenes as $almacenItem)
-                        @if ($almacenItem->id !== $almacen->id)
-                            <option value="{{ $almacenItem->id }}">{{ $almacenItem->nombre }}</option>
+                        @if ($almacenItem->user_id === Auth::id())  <!-- Solo almacenes del usuario autenticado -->
+                            @if ($almacenItem->id !== $almacen->id)
+                                <option value="{{ $almacenItem->id }}">{{ $almacenItem->nombre }}</option>
+                            @endif
                         @endif
                     @endforeach
-                </select>                
+                </select>
             </div>
             <div class="flex justify-end space-x-2">
                 <button id="btn-cancelar" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
@@ -112,7 +115,41 @@
         <input type="hidden" name="cantidad" id="cantidad-enviar">
     </form>
 
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Confirmar eliminación de un artículo con SweetAlert
+        function deleteArticulo(almacenId, articuloId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Este artículo será eliminado de forma permanente.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+            }).then(result => {
+                if (result.isConfirmed) {
+                    fetch(`{{ url('/almacenes/${almacenId}/articulos/${articuloId}') }}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Eliminado', 'El artículo ha sido eliminado.', 'success').then(() => {
+                                });
+                            } else {
+                                Swal.fire('Error', 'No se pudo eliminar el artículo.', 'error');
+                            }
+                        });
+                        location.reload();
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const botonesEnviar = document.querySelectorAll('.btn-enviar');
             const modal = document.getElementById('modal-enviar');
@@ -166,6 +203,14 @@
 
                 // Enviar el formulario
                 form.submit();
+
+                Swal.fire({
+                    title: '¡Enviado!',
+                    text: `El artículo fue enviado con éxito.`,
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false,
+                });
             });
         });
     </script>

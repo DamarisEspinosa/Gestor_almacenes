@@ -15,7 +15,8 @@ class Articulos extends Model
             'cantidad', 
             'descripcion', 
             'almacen_id',
-            'proveedor_id'
+            'proveedor_id',
+            'user_id'
         ];
 
     // Relación con el modelo Almacen
@@ -27,5 +28,10 @@ class Articulos extends Model
     public function proveedor()
     {
         return $this->belongsTo(Proveedor::class);
+    }
+    // Relación con el modelo User 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

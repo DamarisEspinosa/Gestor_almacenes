@@ -116,81 +116,108 @@
         </div>
     </div>
 
-    <script>
-        // Agregar un nuevo almacén
-        document.getElementById('add-warehouse-button').addEventListener('click', function () {
-            const name = prompt('Ingrese el nombre del almacén:');
-            if (name) {
-                fetch('/api/almacenes', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: JSON.stringify({ name }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Almacén agregado con éxito.');
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                            // Recargar la página para reflejar los cambios
-                            location.reload();
-                        } else {
-                            alert('Error al agregar el almacén.');
-                        }
-                    });
-            }
+    <script>
+        // Agregar un nuevo almacén con SweetAlert
+        document.getElementById('add-warehouse-button').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Agregar Almacén',
+                input: 'text',
+                inputLabel: 'Ingrese el nombre del almacén:',
+                inputPlaceholder: 'Nombre del almacén',
+                showCancelButton: true,
+                confirmButtonText: 'Guardar',
+                cancelButtonText: 'Cancelar',
+            }).then(result => {
+                if (result.isConfirmed && result.value) {
+                    fetch('/api/almacenes', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: JSON.stringify({ name: result.value }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Éxito', 'Almacén agregado con éxito.', 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', 'Error al agregar el almacén.', 'error');
+                            }
+                        });
+                }
+            });
         });
 
-        // Editar un almacén
+        // Editar un almacén con SweetAlert
         function editWarehouse(id, currentName) {
-            const newName = prompt('Editar nombre del almacén:', currentName);
-            if (newName) {
-                fetch(`/api/almacenes/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: JSON.stringify({ name: newName }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Almacén actualizado con éxito.');
-
-                            // Recargar la página para reflejar los cambios
-                            location.reload();
-                        } else {
-                            alert('Error al actualizar el almacén.');
-                        }
-                    });
-            }
+            Swal.fire({
+                title: 'Editar Almacén',
+                input: 'text',
+                inputLabel: 'Nuevo nombre del almacén:',
+                inputValue: currentName,
+                showCancelButton: true,
+                confirmButtonText: 'Actualizar',
+                cancelButtonText: 'Cancelar',
+            }).then(result => {
+                if (result.isConfirmed && result.value) {
+                    fetch(`/api/almacenes/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: JSON.stringify({ name: result.value }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Éxito', 'Almacén actualizado con éxito.', 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', 'Error al actualizar el almacén.', 'error');
+                            }
+                        });
+                }
+            });
         }
 
-        // Eliminar un almacén
+        // Eliminar un almacén con SweetAlert
         function deleteWarehouse(id) {
-            if (confirm('¿Estás seguro de que deseas eliminar este almacén?')) {
-                fetch(`/api/almacenes/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Almacén eliminado con éxito.');
-
-                            // Recargar la página para reflejar los cambios
-                            location.reload();
-                        } else {
-                            alert('Error al eliminar el almacén.');
-                        }
-                    });
-            }
+            Swal.fire({
+                title: 'Confirmación',
+                text: '¿Estás seguro de que deseas eliminar este almacén?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar',
+            }).then(result => {
+                if (result.isConfirmed) {
+                    fetch(`/api/almacenes/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Éxito', 'Almacén eliminado con éxito.', 'success').then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', 'Error al eliminar el almacén.', 'error');
+                            }
+                        });
+                }
+            });
         }
     </script>
 </x-app-layout>

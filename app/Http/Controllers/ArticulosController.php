@@ -6,6 +6,7 @@ use App\Models\Articulos;
 use App\Models\Almacen;
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticulosController extends Controller
 {
@@ -39,6 +40,7 @@ class ArticulosController extends Controller
         $articulo->descripcion = $request->descripcion;
         $articulo->almacen_id = $almacen->id;
         $articulo->proveedor_id = $nombreProveedor->id;
+        $articulo->user_id = Auth::id();
         $articulo->save();
 
         // Redirige al almacén con un mensaje de éxito
@@ -49,9 +51,10 @@ class ArticulosController extends Controller
     // Mostrar formulario para editar un artículo existente
     public function edit($almacenId, $articuloId)
     {
-        // Encuentra el almacén y el artículo
         $almacen = Almacen::findOrFail($almacenId);
-        $articulo = Articulos::findOrFail($articuloId);
+        $articulo = Articulos::where('id', $articuloId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
 
         return view('articulos.edit', compact('almacen', 'articulo'));
     }
@@ -65,60 +68,68 @@ class ArticulosController extends Controller
             'descripcion' => 'nullable|string',
         ]);
 
-        // Encuentra el almacén y el artículo
         $almacen = Almacen::findOrFail($almacenId);
-        $articulo = Articulos::findOrFail($articuloId);
+        $articulo = Articulos::where('id', $articuloId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
 
-        // Actualiza los campos del artículo
         $articulo->producto = $request->producto;
         $articulo->cantidad = $request->cantidad;
         $articulo->descripcion = $request->descripcion;
         $articulo->save();
 
         return redirect()->route('almacenView', ['name' => $almacen->nombre])
-                            ->with('success', 'Artículo modificado exitosamente');
+                        ->with('success', 'Artículo modificado exitosamente');
     }
 
     // Eliminar un artículo
     public function destroy($almacenId, $articuloId)
     {
-        $articulo = Articulos::findOrFail($articuloId);
+        $articulo = Articulos::where('id', $articuloId)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
 
-        // Borra el articulo 
         $articulo->delete();
 
         return redirect()->route('almacenView', ['name' => Almacen::findOrFail($almacenId)->nombre])
-                            ->with('success', 'Artículo eliminado exitosamente');
+                        ->with('success', 'Artículo eliminado exitosamente');
     }
 
     // Función para enviar 
     public function transferir(Request $request, Almacen $almacen, Articulos $articulo)
     {
-        // Validar los datos del formulario
+        // Asegurarse de que el artículo pertenece al usuario autenticado
+        $articulo = Articulos::where('id', $articulo->id)
+                            ->where('user_id', Auth::id())
+                            ->firstOrFail();
+
+        // Validar la cantidad y el almacén destino
         $request->validate([
             'cantidad' => 'required|integer|min:1|max:' . $articulo->cantidad,
             'almacen_destino_id' => 'required|exists:almacenes,id',
         ]);
-    
-        $almacenDestino = Almacen::where('id', $request->almacen_destino_id)->firstOrFail();
 
-    
-        // Actualizar el artículo en el almacén de origen
+        // Verificar que el almacén destino pertenece al usuario autenticado
+        $almacenDestino = Almacen::where('id', $request->almacen_destino_id)
+                                ->where('user_id', Auth::id())
+                                ->firstOrFail(); // Esto lanzará una excepción si no se encuentra
+
+        // Reducir la cantidad en el almacén original
         $articulo->cantidad -= $request->cantidad;
         $articulo->save();
-    
+
         // Crear o actualizar el artículo en el almacén destino
         $articuloDestino = Articulos::firstOrNew([
             'almacen_id' => $almacenDestino->id,
             'producto' => $articulo->producto,
         ]);
-    
+
         $articuloDestino->cantidad += $request->cantidad;
         $articuloDestino->descripcion = $articulo->descripcion;
-        $articuloDestino->proveedor_id = 1;
+        $articuloDestino->proveedor_id = $articulo->proveedor_id; // Usa el proveedor original
+        $articuloDestino->user_id = Auth::id(); // Asegura que el artículo transferido siga perteneciendo al usuario actual
         $articuloDestino->save();
-    
-        // Redirigir con mensaje de éxito
+
         return redirect()->back()->with('success', 'Producto transferido correctamente.');
     }
 }

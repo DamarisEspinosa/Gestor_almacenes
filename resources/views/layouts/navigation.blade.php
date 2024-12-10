@@ -15,9 +15,7 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" class = "text-black dark:text-black">
                     @auth
-                        @if (auth()->user()->tipo === 'secretaria')
-                            
-                        @elseif (auth()->user()->tipo === 'empleado')
+                        @if (auth()->user()->tipo === 'empleado')
 
                         @elseif (auth()->check() && auth()->user()->tipo === 'admin')
                         <!-- Admin Navigation Links -->
