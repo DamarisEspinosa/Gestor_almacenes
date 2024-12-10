@@ -92,9 +92,33 @@ class ArticulosController extends Controller
     }
 
     // Función para enviar 
-    public function send(Articulo $articulo)
+    public function transferir(Request $request, Almacen $almacen, Articulos $articulo)
     {
-        return redirect()->route('almacenView', $articulo->almacen_id)
-                         ->with('success', 'Artículo enviado correctamente.');
+        // Validar los datos del formulario
+        $request->validate([
+            'cantidad' => 'required|integer|min:1|max:' . $articulo->cantidad,
+            'almacen_destino_id' => 'required|exists:almacenes,id',
+        ]);
+    
+        $almacenDestino = Almacen::where('id', $request->almacen_destino_id)->firstOrFail();
+
+    
+        // Actualizar el artículo en el almacén de origen
+        $articulo->cantidad -= $request->cantidad;
+        $articulo->save();
+    
+        // Crear o actualizar el artículo en el almacén destino
+        $articuloDestino = Articulos::firstOrNew([
+            'almacen_id' => $almacenDestino->id,
+            'producto' => $articulo->producto,
+        ]);
+    
+        $articuloDestino->cantidad += $request->cantidad;
+        $articuloDestino->descripcion = $articulo->descripcion;
+        $articuloDestino->proveedor_id = 1;
+        $articuloDestino->save();
+    
+        // Redirigir con mensaje de éxito
+        return redirect()->back()->with('success', 'Producto transferido correctamente.');
     }
 }

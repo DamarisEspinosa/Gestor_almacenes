@@ -32,6 +32,10 @@ Route::post('/almacenes/{almacen}/articulos', [ArticulosController::class, 'stor
 Route::get('/almacenes/{almacen}/articulos/{articulo}/edit', [ArticulosController::class, 'edit'])->name('articulos.edit');
 Route::put('/almacenes/{almacen}/articulos/{articulo}', [ArticulosController::class, 'update'])->name('articulos.update');
 Route::delete('/almacenes/{almacen}/articulos/{articulo}', [ArticulosController::class, 'destroy'])->name('articulos.destroy');
+//Enviar productos
+Route::post('/almacenes/{almacen}/articulos/{articulo}/transferir', [ArticulosController::class, 'transferir'])
+    ->middleware('auth')
+    ->name('articulos.transferir');
 
 // PROVEEDORES
 Route::get('/proveedores/create', [ProveedorController::class, 'create'])->name('proveedores.create');

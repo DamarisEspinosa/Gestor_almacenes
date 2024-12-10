@@ -32,7 +32,10 @@ class WarehouseController extends Controller
         // Obtén los artículos relacionados con este almacén
         $articulos = $almacen->articulos;
 
-        return view('almacenView', compact('articulos', 'almacen'), ['name' => $name]);
+        // Obtener todos los almacenes del usuario autenticado
+        $almacenes = Almacen::all();
+
+        return view('almacenView', compact('articulos', 'almacen', 'almacenes', 'name'));
     }
 
     public function index()
