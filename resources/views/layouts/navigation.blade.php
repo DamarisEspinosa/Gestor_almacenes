@@ -23,10 +23,10 @@
                         <!-- Admin Navigation Links -->
                      
                         <x-nav-link :href="route('admin.register')" :active="request()->routeIs('admin.register')">
-                            {{ __('Personal') }}
+                            {{ __('Empresas') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.administrar')" :active="request()->routeIs('admin.administrar')">
-                            {{ __('Administrar Personal') }}
+                            {{ __('Administrar Empresas') }}
                         </x-nav-link>
                     @endif
                     @endauth

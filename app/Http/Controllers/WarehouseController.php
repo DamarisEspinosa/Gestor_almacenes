@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Models\Articulos;
+use Illuminate\Support\Facades\Auth;
 
 class WarehouseController extends Controller
 {
@@ -18,6 +19,7 @@ class WarehouseController extends Controller
         // Crear el almacén
         Almacen::create([
             'nombre' => $request->name,
+            'user_id' => Auth::id(),
         ]);
 
         // Responder con éxito

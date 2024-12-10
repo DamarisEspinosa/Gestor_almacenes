@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\Auth;
 
 class ProveedorController extends Controller
 {
@@ -28,6 +29,7 @@ class ProveedorController extends Controller
         $proveedor->email = $request->email;
         $proveedor->direccion = $request->direccion;
         $proveedor->formaPago = $request->formaPago;
+        $proveedor->user_id = Auth::id();
         $proveedor->save();
 
         return redirect()->route('welcome')
@@ -58,6 +60,7 @@ class ProveedorController extends Controller
         $proveedor->email = $request->email;
         $proveedor->direccion = $request->direccion;
         $proveedor->formaPago = $request->formaPago;
+        $proveedor->user_id = Auth::id();
         $proveedor->save();
 
         return redirect()->route('welcome')

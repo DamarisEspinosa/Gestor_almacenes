@@ -28,11 +28,11 @@
                     <table class="w-full text-sm text-center text-gray-600">
                         <thead class="text-xs text-gray-800 uppercase bg-blue-200">
                             <tr>
-                                <th scope="col" class="px-6 py-3 font-bold">Nombre</th>
+                                <th scope="col" class="px-6 py-3 font-bold">Nombre Comercial</th>
                                 <th scope="col" class="px-6 py-3 font-bold">Correo</th>
                                 <th scope="col" class="px-6 py-3 font-bold">Tipo</th>
-                                <th scope="col" class="px-6 py-3 font-bold">Teléfono</th>
-                                <th scope="col" class="px-6 py-3 font-bold">RFC</th>
+                                <th scope="col" class="px-6 py-3 font-bold">Teléfono de contacto</th>
+                                <th scope="col" class="px-6 py-3 font-bold">Número de identificación fiscal.</th>
                                 
                                 <th scope="col" class="px-6 py-3 font-bold">Acciones</th>
                             </tr>

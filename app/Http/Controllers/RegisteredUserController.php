@@ -32,14 +32,14 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Crear el usuario con el tipo fijo "empleado"
+        // Crear el usuario con el tipo fijo "empresa"
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'telefono' => $request->telefono,
             'rfc' => $request->rfc,
-            'tipo' => 'empleado', 
+            'tipo' => 'empresa', 
         ]);
 
         // Evento de registro

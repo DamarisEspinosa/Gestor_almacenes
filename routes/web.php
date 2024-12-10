@@ -26,6 +26,10 @@ Route::put('/api/almacenes/{id}', [WarehouseController::class, 'update']);
 // Ruta para eliminar un almacén
 Route::delete('/api/almacenes/{id}', [WarehouseController::class, 'destroy']);
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('almacenes', WarehouseController::class);
+});
+
 // ARTICULOS 
 Route::get('/almacenes/{almacen}/articulos/create', [ArticulosController::class, 'create'])->name('articulos.create');
 Route::post('/almacenes/{almacen}/articulos', [ArticulosController::class, 'store'])->name('articulos.store');

@@ -16,8 +16,8 @@
                 
                 <!-- Nombre -->
                 <div>
-                    <label class="text-sm mt-1 mb-1 block">{{ __('Nombre') }}</label>
-                    <x-text-input id="name" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nombre" />
+                    <label class="text-sm mt-1 mb-1 block">{{ __('Nombre Comercial') }}</label>
+                    <x-text-input id="name" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Nombre Comercial" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
@@ -44,15 +44,15 @@
 
                 <!-- Teléfono -->
                 <div>
-                    <label class="text-sm mt-1 mb-1 block">{{ __('Teléfono') }}</label>
-                    <x-text-input id="telefono" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="telefono" :value="old('telefono')" required placeholder="Teléfono" />
+                    <label class="text-sm mt-1 mb-1 block">{{ __('Teléfono de contacto') }}</label>
+                    <x-text-input id="telefono" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="telefono" :value="old('telefono')" required placeholder="Teléfono de contacto" />
                     <x-input-error :messages="$errors->get('telefono')" class="mt-2" />
                 </div>
 
                 <!-- RFC -->
                 <div>
-                    <label class="text-sm mt-1 mb-1 block">{{ __('RFC') }}</label>
-                    <x-text-input id="rfc" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="rfc" :value="old('rfc')" required placeholder="RFC" />
+                    <label class="text-sm mt-1 mb-1 block">{{ __('RFC/NIT/CIF') }}</label>
+                    <x-text-input id="rfc" class="bg-gray-100 w-full text-sm px-4 py-3.5 rounded-md outline-blue-500" type="text" name="rfc" :value="old('rfc')" required placeholder="Número de identificación fiscal" />
                     <x-input-error :messages="$errors->get('rfc')" class="mt-2" />
                 </div>
             </div>

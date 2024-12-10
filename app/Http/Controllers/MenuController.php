@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Almacen;
 use App\Models\Proveedor;
+use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller
 {
@@ -14,8 +15,8 @@ class MenuController extends Controller
 
     public function welcome(){
         // Obtener todos los almacenes de la base de datos
-        $almacenes = Almacen::all();
-        $proveedores = Proveedor::all();
+        $almacenes = Almacen::where('user_id', Auth::id())->get();
+        $proveedores = Proveedor::where('user_id', Auth::id())->get();
 
         // Pasar los almacenes a la vista welcome
         return view('welcome', compact('almacenes', 'proveedores'));

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('direccion');
             $table->enum('formaPago', ['transferencia', 'efectivo']);
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
