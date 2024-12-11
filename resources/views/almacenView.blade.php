@@ -43,7 +43,7 @@
                 </thead>
                 <tbody>
                     @foreach ($articulos as $articulo)
-                        <tr class="border-b text-center">
+                        <tr class="border-b text-center {{ $articulo->cantidad == 0 ? 'bg-red-200' : '' }}">
                             <td class="px-4 py-2">{{ $articulo->id }}</td>
                             <td class="px-4 py-2">{{ $articulo->producto }}</td>
                             <td class="px-4 py-2">{{ $articulo->cantidad }}</td>
@@ -61,12 +61,13 @@
                                 </button>
                                 <button
                                     onclick="sendArticulo({{ $articulo->id }})"
-                                    class="btn-enviar bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded"
+                                    class="btn-enviar bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded {{ $articulo->cantidad == 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
                                     data-producto="{{ $articulo->producto }}" 
                                     data-cantidad="{{ $articulo->cantidad }}"
                                     data-stock="{{ $articulo->cantidad }}"
                                     data-articulo-id="{{ $articulo->id }}"
-                                    data-almacen-id="{{ $almacen->id }}">
+                                    data-almacen-id="{{ $almacen->id }}"
+                                    {{ $articulo->cantidad == 0 ? 'disabled' : '' }}>
                                     Enviar
                                 </button>
                             </td>
